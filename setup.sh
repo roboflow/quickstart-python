@@ -106,6 +106,34 @@ install_using_package_manager() {
     fi
     ;;
 
+  # windows
+  msys)
+    if [[ $2 ]]
+    then
+      echo "choco install $1"
+    else
+      # first ensure choco is installed
+      if ! command -v choco &> /dev/null
+      then
+        # notify them choco is missing and ask if they want to install it
+        echo "choco was not found on your system, but is required to run this project"
+        read -p "Would you like to install choco now? [Y/n] " -n 1 -r
+
+        # if not, exit
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+          exit 1
+        fi
+
+        # install choco
+        powershell.exe -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+      fi
+
+      # install the dependency
+      choco install $1
+    fi
+    ;;
+
   *)
     echo -n "unsupported OS"
     ;;
@@ -140,7 +168,13 @@ check_and_install_dependencies() {
 }
 
 # check for node
-check_and_install_dependencies node
+# on windows this is called nodejs; on other platforms it's called node
+if [[ $(uname -s) == "MSYS_NT"* ]]
+then
+  check_and_install_dependencies nodejs
+else
+  check_and_install_dependencies node
+fi
 
 # check for python3
 check_and_install_dependencies python3
