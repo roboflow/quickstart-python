@@ -40,17 +40,6 @@ printLettersOneByOne 0.02 "Let's check your dependencies and get started."
 echo ""
 sleep 0.1
 
-printLettersOneByOne 0.01 "This script will:"
-printLettersOneByOne 0.01 "    - check for node.js and python3"
-printLettersOneByOne 0.01 "    - create a virtual environment for pip dependencies"
-printLettersOneByOne 0.01 "    - start a local Roboflow inference server"
-printLettersOneByOne 0.01 "    - open a local Jupyter notebook with quickstart.ipynb"
-echo ""
-sleep 1
-
-# for debugging, uncomment the following line to print all commands
-# set -ex
-
 # determine OS
 OS=$(uname -s | cut -d_ -f1 | tr A-Z a-z)
 
@@ -61,6 +50,17 @@ then
   sleep 69420
   exit 1
 fi
+
+printLettersOneByOne 0.01 "This script will:"
+printLettersOneByOne 0.01 "    - check for node.js and python3"
+printLettersOneByOne 0.01 "    - create a virtual environment for pip dependencies"
+printLettersOneByOne 0.01 "    - start a local Roboflow inference server"
+printLettersOneByOne 0.01 "    - open a local Jupyter notebook with quickstart.ipynb"
+echo ""
+sleep 1
+
+# for debugging, uncomment the following line to print all commands
+# set -ex
 
 # modified install_using_package_manager function which accepts a second argument which,
 # when true, returns the command that will be run (so the calling code can preview it for the user),
@@ -213,8 +213,8 @@ pip3 install -v --log /tmp/pip.log roboflow notebook
 # detect WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null
 then
+  sleep 1 && /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888/notebooks/quickstart.ipynb" &
   jupyter notebook --no-browser --port 8888
-  /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888"
 else
   jupyter notebook ./quickstart.ipynb
 fi
