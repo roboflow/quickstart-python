@@ -1,69 +1,95 @@
 #!/bin/bash
 
 # Output a cool Roboflow Quickstart ASCII art intro
-echo "██████╗  ██████╗ ██████╗  ██████╗ ███████╗██╗      ██████╗ ██╗    ██╗"
+echo ""
+echo " ██████╗  ██████╗ ██████╗  ██████╗ ███████╗██╗      ██████╗ ██╗    ██╗"
 sleep 0.1
-echo "██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗██╔════╝██║     ██╔═══██╗██║    ██║"
+echo " ██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗██╔════╝██║     ██╔═══██╗██║    ██║"
 sleep 0.1
-echo "██████╔╝██║   ██║██████╔╝██║   ██║█████╗  ██║     ██║   ██║██║ █╗ ██║"
+echo " ██████╔╝██║   ██║██████╔╝██║   ██║█████╗  ██║     ██║   ██║██║ █╗ ██║"
 sleep 0.1
-echo "██╔══██╗██║   ██║██╔══██╗██║   ██║██╔══╝  ██║     ██║   ██║██║███╗██║"
+echo " ██╔══██╗██║   ██║██╔══██╗██║   ██║██╔══╝  ██║     ██║   ██║██║███╗██║"
 sleep 0.1
-echo "██║  ██║╚██████╔╝██████╔╝╚██████╔╝██║     ███████╗╚██████╔╝╚███╔███╔╝"
+echo " ██║  ██║╚██████╔╝██████╔╝╚██████╔╝██║     ███████╗╚██████╔╝╚███╔███╔╝"
 sleep 0.1
-echo "╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ "
+echo " ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ "
 sleep 0.1
 
-# print the text "Welcome to the Roboflow Quickstart!" one character at a time
-# with a 0.1 second delay between each character
-# and a 0.2 second delay between each word
-for word in "Welcome to the Roboflow Quickstart!"
-do
-  for ((i=0; i<${#word}; i++))
+# print the text from parameter 1 one character at a time
+printLettersOneByOne() {
+  delay=$1
+  words=$2
+
+  echo -n " "
+  for word in $words
   do
-    echo -n "${word:$i:1}"
-    sleep 0.02
+    for ((i=0; i<${#word}; i++))
+    do
+      echo -n "${word:$i:1}"
+      sleep $delay
+    done
+    echo -n " "
   done
-  echo
-  sleep 0.1
-done
+  echo ""
+}
 
+printLettersOneByOne 0.02 "Welcome to the Roboflow Quickstart!"
 sleep 0.5
 
-for word in "Let's check your dependencies and get started."
-do
-  for ((i=0; i<${#word}; i++))
-  do
-    echo -n "${word:$i:1}"
-    sleep 0.02
-  done
-  echo
-  sleep 0.1
-done
+printLettersOneByOne 0.02 "Let's check your dependencies and get started."
+echo ""
+sleep 0.1
 
-# sleep for 1 second
+printLettersOneByOne 0.01 "This script will:"
+printLettersOneByOne 0.01 "    - check for node.js and python3"
+printLettersOneByOne 0.01 "    - create a virtual environment for pip dependencies"
+printLettersOneByOne 0.01 "    - start a local Roboflow inference server"
+printLettersOneByOne 0.01 "    - open a local Jupyter notebook with quickstart.ipynb"
+echo ""
 sleep 1
 
 # for debugging, uncomment the following line to print all commands
 # set -ex
 
+# determine OS
+OS=$(uname -s | cut -d_ -f1 | tr A-Z a-z)
+
+# if OS is windows, exit with an error message to use WSL
+if [[ $OS == "msys" || $OS == "mingw32" || $OS == "mingw64" ]]
+then
+  echo " Windows is not supported; please use WSL."
+  sleep 69420
+  exit 1
+fi
+
 # modified install_using_package_manager function which accepts a second argument which,
 # when true, returns the command that will be run (so the calling code can preview it for the user),
 # and when false actually runs the command
 install_using_package_manager() {
-  # determine OS
-  OS=$(uname -s | tr A-Z a-z)
-
   case $OS in
   linux)
     source /etc/os-release
     case $ID in
     debian | ubuntu | mint)
+      # overwrite the package name to python3-pip here if it's pip3 because apt is different
+      # otherwise leave it the same
+      package=$1
+      if [[ $1 == "pip3" ]]
+      then
+        package="python3-pip python3-venv"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs"
+      fi
+
       if [[ $2 ]]
       then
-        echo "apt install $1"
+        echo "sudo apt update && sudo apt install -y $package"
       else
-        sudo apt install $1
+        sudo apt update && sudo apt install -y $package
       fi
       ;;
 
@@ -77,7 +103,8 @@ install_using_package_manager() {
       ;;
 
     *)
-      echo -n "unsupported linux distro"
+      echo -n "Unable to detect the default package manager for this Linux distro (please install node.js and python3 on your own and try again)."
+      exit 1
       ;;
     esac
     ;;
@@ -93,49 +120,32 @@ install_using_package_manager() {
         # notify them brew is missing and ask if they want to install it
         echo "brew was not found on your system, but is required to run this project"
         read -p "Would you like to install brew now? [Y/n] " -n 1 -r
+        echo ""
 
-        # if not, exit
-        if [[ $REPLY =~ ^[Yy]$ ]]
+        # if $REPLY is not on of { Y, y, or "empty string" } then exit
+        if ! [[ $REPLY =~ ^[Yy]$|^$ ]]
         then
           exit 1
         fi
 
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       fi
-      brew install $1
     fi
     ;;
 
   # windows
-  msys)
+  msys | mingw32 | mingw64)
     if [[ $2 ]]
     then
-      echo "choco install $1"
+      echo "Windows is not supported; please use WSL."
     else
-      # first ensure choco is installed
-      if ! command -v choco &> /dev/null
-      then
-        # notify them choco is missing and ask if they want to install it
-        echo "choco was not found on your system, but is required to run this project"
-        read -p "Would you like to install choco now? [Y/n] " -n 1 -r
-
-        # if not, exit
-        if [[ $REPLY =~ ^[Yy]$ ]]
-        then
-          exit 1
-        fi
-
-        # install choco
-        powershell.exe -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
-      fi
-
-      # install the dependency
-      choco install $1
+      # Can't get here because we exited already
+      sleep 0.1
     fi
     ;;
 
   *)
-    echo -n "unsupported OS"
+    echo -n "Unsupported OS, $OS"
     ;;
   esac
 }
@@ -149,11 +159,16 @@ check_and_install_dependencies() {
     # get command to run to install the dependency and save it to  a variable we can print later
     install_command=$(install_using_package_manager $1 true)
     
-    # ask if they'd like to install it (default to y if they just hit enter)
-    # and if reply is not Y/y or N/n (i.e. they just hit enter), ask again
-    while [[ ! $REPLY =~ ^[YyNn]$ ]]
+    # ask if they'd like to install it (default to yes if they just hit enter)
+    # and if reply is not Y/y or N/n or default <Enter>, ask again
+    while true
     do
-      read -p "Would you like to install $1 now? (command: \`$install_command\`) [Y/n] " -n 1 -r
+      read -p "Would you like to install $1 now ($install_command)? [Y/n] " -n 1 -r
+      echo ""
+      if [[ $REPLY =~ ^[Yy]$ || $REPLY =~ ^[Nn]$ || $REPLY == "" ]]
+      then
+        break
+      fi
     done
 
     # if no, exit
@@ -168,16 +183,11 @@ check_and_install_dependencies() {
 }
 
 # check for node
-# on windows this is called nodejs; on other platforms it's called node
-if [[ $(uname -s) == "MSYS_NT"* ]]
-then
-  check_and_install_dependencies nodejs
-else
-  check_and_install_dependencies node
-fi
+check_and_install_dependencies node
 
 # check for python3
 check_and_install_dependencies python3
+check_and_install_dependencies pip3
 
 # create a virtual environment called roboflow if it doesn't already exist from a previous time they ran this script
 # and activate it
@@ -186,14 +196,25 @@ then
   python3 -m venv roboflow
 fi
 source roboflow/bin/activate
+export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-npx @roboflow/inference-server &> /dev/null &
+npx --yes @roboflow/inference-server &> /dev/null &
 
 # pip install the requirements
 # and run the roboflow notebook
-pip3 install roboflow notebook
+pip3 install -v --log /tmp/pip.log roboflow notebook
 
 # run the roboflow notebook (./quickstart.ipynb)
-jupyter notebook ./quickstart.ipynb
+# if we're running in WSL, open with --no-browser and use the native cmd to open Jupyter
+# otherwise, open Jupyter normally
+
+# detect WSL
+if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null
+then
+  jupyter notebook --no-browser --port 8888
+  /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888"
+else
+  jupyter notebook ./quickstart.ipynb
+fi
