@@ -62,6 +62,13 @@ sleep 1
 # for debugging, uncomment the following line to print all commands
 # set -ex
 
+# don't fail if already running as root
+sudo ()
+{
+    [[ $EUID = 0 ]] || set -- command sudo "$@"
+    "$@"
+}
+
 # modified install_using_package_manager function which accepts a second argument which,
 # when true, returns the command that will be run (so the calling code can preview it for the user),
 # and when false actually runs the command
@@ -216,5 +223,5 @@ then
   sleep 1 && /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888/notebooks/quickstart.ipynb" &
   jupyter notebook --no-browser --port 8888
 else
-  jupyter notebook ./quickstart.ipynb
+  jupyter notebook --allow-root ./quickstart.ipynb
 fi
