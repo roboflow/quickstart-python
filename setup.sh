@@ -94,7 +94,7 @@ PIP_COMMAND="pip3"
 if [[ $OS == "linux" ]]
 then
   source /etc/os-release
-  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" ]]
+  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" || $ID == "amzn"]]
   then
     PYTHON_COMMAND="python3.8"
     PIP_COMMAND="pip3.8"
@@ -143,7 +143,7 @@ install_using_package_manager() {
       fi
       ;;
 
-    fedora | rhel | centos | amzn)
+    fedora | rhel | centos)
       package=$1
       module=""
 
@@ -166,7 +166,38 @@ install_using_package_manager() {
         sudo yum$module install -y $package
       fi
       ;;
+    amzn)
+      package=$1
+      
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        if [[ $2 ]]
+        then
+          echo "sudo amazon-linux-extras install -y python3.8"
+        else
+          sudo amazon-linux-extras install -y python3.8
+        fi
+        return
+      fi
 
+      if [[ $1 == "node" ]]
+      then
+        if [[ $2 ]]
+        then
+          echo "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash && nvm install 16"
+        else
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash && nvm install 16
+        fi
+        return
+      fi
+
+      if [[ $2 ]]
+      then
+        echo "sudo yum install -y $package"
+      else
+        sudo yum install -y $package
+      fi
+      ;;
     *)
       echo -n "Unable to detect the default package manager for this Linux distro (please install node.js and python3 on your own and try again)."
       exit 1
