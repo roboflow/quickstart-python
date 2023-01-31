@@ -118,9 +118,9 @@ install_using_package_manager() {
 
       if [[ $2 ]]
       then
-        echo "yum install $package"
+        echo "sudo yum install -y $package"
       else
-        sudo yum install $package
+        sudo yum install -y $package
       fi
       ;;
 
