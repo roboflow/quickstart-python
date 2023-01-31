@@ -2,6 +2,7 @@
 
 # Output a cool Roboflow Quickstart ASCII art intro
 echo ""
+echo ""
 echo " ██████╗  ██████╗ ██████╗  ██████╗ ███████╗██╗      ██████╗ ██╗    ██╗"
 sleep 0.1
 echo " ██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗██╔════╝██║     ██╔═══██╗██║    ██║"
@@ -13,7 +14,9 @@ sleep 0.1
 echo " ██║  ██║╚██████╔╝██████╔╝╚██████╔╝██║     ███████╗╚██████╔╝╚███╔███╔╝"
 sleep 0.1
 echo " ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ "
-sleep 0.1
+echo ""
+echo ""
+sleep 0.2
 
 # print the text from parameter 1 one character at a time
 printLettersOneByOne() {
@@ -34,11 +37,9 @@ printLettersOneByOne() {
 }
 
 printLettersOneByOne 0.01 "Welcome to the Roboflow computer vision quickstart!"
-sleep 0.5
-
 printLettersOneByOne 0.01 "Let's check your dependencies and get started."
 echo ""
-sleep 0.1
+sleep 0.5
 
 # determine OS
 OS=$(uname -s | cut -d_ -f1 | tr A-Z a-z)
@@ -57,6 +58,8 @@ printLettersOneByOne 0.01 "    - create a virtual environment for pip dependenci
 printLettersOneByOne 0.01 "    - start a local Roboflow inference server"
 printLettersOneByOne 0.01 "    - open a local Jupyter notebook with quickstart.ipynb"
 echo ""
+
+sleep 0.5
 
 # Pause to wait for user to read the above and be ready to continue
 read -p "Press any key to continue... 🦝 " -n 1 -r
