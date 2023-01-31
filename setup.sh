@@ -99,16 +99,16 @@ install_using_package_manager() {
     source /etc/os-release
 
     package=$1
-    # overwrite node to nodejs
-    if [[ $1 == "node" ]]
-    then
-      package="nodejs"
-    fi
-
     case $ID in
     debian | ubuntu | mint)
-      # overwrite the package name to python3-pip here if it's pip3 because apt is different
+      # overwrite the package names to nodejs and python3-pip here if it's pip3 because apt is different
       # otherwise leave it the same
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs"
+      fi
       
       if [[ $1 == "pip3" ]]
       then
@@ -129,11 +129,19 @@ install_using_package_manager() {
         package="python38 python38-pip python38-devel gcc"
       fi
 
+      package=$1
+      module=""
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs:18/common"
+      fi
+
       if [[ $2 ]]
       then
-        echo "sudo yum install -y $package"
+        echo "sudo yum $module install -y $package"
       else
-        sudo yum install -y $package
+        sudo yum $module install -y $package
       fi
       ;;
 
@@ -235,6 +243,7 @@ export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
+npm install -g @roboflow/inference-server
 npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
