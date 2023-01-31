@@ -77,8 +77,8 @@ sudo ()
     "$@"
 }
 
-PYTHON_COMMAND = "python3"
-PIP_COMMAND = "pip3"
+PYTHON_COMMAND="python3"
+PIP_COMMAND="pip3"
 # if using yum package manager, use python3.8 and pip3.8 instead of python3 and pip3
 if [[ $OS == "linux" ]]
 then
