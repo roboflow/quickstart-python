@@ -270,7 +270,6 @@ export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-sudo npm install -g @roboflow/inference-server
 npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
@@ -300,7 +299,7 @@ echo "                &&&   &&&               "
 echo ""
 echo ""
 echo "Starting Roboflow quickstart notebook..."
-echo "🤫 If prompted, use the password: $NOTEBOOK_PASSWORD"
+echo "🚨 If prompted, use the password: $NOTEBOOK_PASSWORD"
 echo ""
 sleep 3
 
@@ -312,7 +311,7 @@ sleep 3
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null
 then
   sleep 1 && /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888/notebooks/quickstart.ipynb" &
-  jupyter notebook --no-browser --port 8888 --ip 0.0.0.0 --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')"
+  jupyter notebook --no-browser --port 8888 --ip 0.0.0.0 --NotebookApp.token="$(head /dev/urandom | md5)" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')"
 else
-  jupyter notebook --allow-root --port 8888 --ip 0.0.0.0 --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')" ./quickstart.ipynb 
+  jupyter notebook --allow-root --port 8888 --ip 0.0.0.0 --NotebookApp.token="$(head /dev/urandom | md5)" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')" ./quickstart.ipynb 
 fi
