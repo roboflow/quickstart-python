@@ -2,7 +2,9 @@
 
 # Output a cool Roboflow Quickstart ASCII art intro
 echo ""
+sleep 0.1
 echo ""
+sleep 0.1
 echo " ██████╗   ██████╗  ██████╗   ██████╗  ███████╗ ██╗       ██████╗  ██╗    ██╗"
 sleep 0.1
 echo " ██╔══██╗ ██╔═══██╗ ██╔══██╗ ██╔═══██╗ ██╔════╝ ██║      ██╔═══██╗ ██║    ██║"
@@ -15,6 +17,7 @@ echo " ██║  ██║ ╚██████╔╝ ██████╔╝
 sleep 0.1
 echo " ╚═╝  ╚═╝  ╚═════╝  ╚═════╝   ╚═════╝  ╚═╝      ╚══════╝  ╚═════╝   ╚══╝╚══╝ "
 echo ""
+sleep 0.1
 echo ""
 sleep 0.2
 
@@ -62,7 +65,7 @@ echo ""
 sleep 0.5
 
 # Pause to wait for user to read the above and be ready to continue
-read -p "Press any key to continue... 🦝 " -n 1 -r
+read -p " Press any key to continue... 🦝 " -n 1 -r
 
 # for debugging, uncomment the following line to print all commands
 # set -ex
