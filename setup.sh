@@ -300,7 +300,7 @@ echo "                &&&   &&&               "
 echo ""
 echo ""
 echo "Starting Roboflow quickstart notebook..."
-echo "If prompted, use the password: $NOTEBOOK_PASSWORD"
+echo "🤫 If prompted, use the password: $NOTEBOOK_PASSWORD"
 echo ""
 sleep 3
 
