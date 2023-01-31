@@ -94,7 +94,7 @@ PIP_COMMAND="pip3"
 if [[ $OS == "linux" ]]
 then
   source /etc/os-release
-  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" || $ID == "amzn"]]
+  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" || $ID == "amzn" ]]
   then
     PYTHON_COMMAND="python3.8"
     PIP_COMMAND="pip3.8"
