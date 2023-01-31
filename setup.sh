@@ -1,6 +1,6 @@
 #!/bin/bash
 
-$NOTEBOOK_PASSWORD="roboflow"
+NOTEBOOK_PASSWORD="roboflow"
 
 # Output a cool Roboflow Quickstart ASCII art intro
 echo ""
@@ -314,5 +314,5 @@ then
   sleep 1 && /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888/notebooks/quickstart.ipynb" &
   jupyter notebook --no-browser --port 8888 --ip 0.0.0.0 --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')"
 else
-  jupyter notebook --allow-root --port 8888 --ip 0.0.0.0 --ip 0.0.0.0 --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')" & ./quickstart.ipynb 
+  jupyter notebook --allow-root --port 8888 --ip 0.0.0.0 --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')" & ./quickstart.ipynb 
 fi
