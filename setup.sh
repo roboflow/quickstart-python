@@ -84,20 +84,22 @@ install_using_package_manager() {
   case $OS in
   linux)
     source /etc/os-release
+
+    package=$1
+    # overwrite node to nodejs
+    if [[ $1 == "node" ]]
+    then
+      package="nodejs"
+    fi
+
     case $ID in
     debian | ubuntu | mint)
       # overwrite the package name to python3-pip here if it's pip3 because apt is different
       # otherwise leave it the same
-      package=$1
+      
       if [[ $1 == "pip3" ]]
       then
         package="python3-pip python3-venv"
-      fi
-
-      # overwrite node to nodejs
-      if [[ $1 == "node" ]]
-      then
-        package="nodejs"
       fi
 
       if [[ $2 ]]
@@ -109,6 +111,11 @@ install_using_package_manager() {
       ;;
 
     fedora | rhel | centos)
+      if [[ $1 == "python3" ]]
+      then
+        package="python3 python3-pip"
+      fi
+
       if [[ $2 ]]
       then
         echo "yum install $1"
