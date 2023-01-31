@@ -235,7 +235,7 @@ export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-npx --yes @roboflow/inference-server &> /dev/null &
+npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
 # and run the roboflow notebook
