@@ -236,6 +236,9 @@ check_and_install_dependencies() {
   fi
 }
 
+# check for curl
+check_and_install_dependencies curl
+
 # check for node
 check_and_install_dependencies node
 
