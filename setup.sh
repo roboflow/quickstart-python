@@ -77,6 +77,19 @@ sudo ()
     "$@"
 }
 
+PYTHON_COMMAND = "python3"
+PIP_COMMAND = "pip3"
+# if using yum package manager, use python3.8 and pip3.8 instead of python3 and pip3
+if [[ $OS == "linux" ]]
+then
+  source /etc/os-release
+  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" ]]
+  then
+    PYTHON_COMMAND="python3.8"
+    PIP_COMMAND="pip3.8"
+  fi
+fi
+
 # modified install_using_package_manager function which accepts a second argument which,
 # when true, returns the command that will be run (so the calling code can preview it for the user),
 # and when false actually runs the command
@@ -111,7 +124,7 @@ install_using_package_manager() {
       ;;
 
     fedora | rhel | centos)
-      if [[ $1 == "python3" ]]
+      if [[ $1 == $PYTHON_COMMAND ]]
       then
         package="python38 python38-pip python3-devel gcc"
       fi
@@ -208,14 +221,14 @@ check_and_install_dependencies() {
 check_and_install_dependencies node
 
 # check for python3
-check_and_install_dependencies python3
-check_and_install_dependencies pip3
+check_and_install_dependencies $PYTHON_COMMAND
+check_and_install_dependencies $PIP_COMMAND
 
 # create a virtual environment called roboflow if it doesn't already exist from a previous time they ran this script
 # and activate it
 if [[ ! -d roboflow ]]
 then
-  python3 -m venv roboflow
+  $PYTHON_COMMAND -m venv roboflow
 fi
 source roboflow/bin/activate
 export PATH=$PATH:~/.local/bin
@@ -226,7 +239,7 @@ npx --yes @roboflow/inference-server &> /dev/null &
 
 # pip install the requirements
 # and run the roboflow notebook
-pip3 install -v --log /tmp/pip.log roboflow notebook
+$PIP_COMMAND install -v --log /tmp/pip.log roboflow notebook
 
 echo ""
 echo ""
