@@ -124,13 +124,14 @@ install_using_package_manager() {
       ;;
 
     fedora | rhel | centos)
+      package=$1
+      module=""
+      
       if [[ $1 == $PYTHON_COMMAND ]]
       then
         package="python38 python38-pip python38-devel gcc"
       fi
 
-      package=$1
-      module=""
       # overwrite node to nodejs
       if [[ $1 == "node" ]]
       then
