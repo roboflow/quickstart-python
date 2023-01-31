@@ -172,7 +172,7 @@ install_using_package_manager() {
       if ! command -v brew &> /dev/null
       then
         # notify them brew is missing and ask if they want to install it
-        echo "brew was not found on your system, but is required to run this project"
+        echo "🚨 brew was not found on your system, but is required to run this project"
         read -p "Would you like to install brew now? [Y/n] " -n 1 -r
         echo ""
 
@@ -209,7 +209,7 @@ check_and_install_dependencies() {
   # check if the dependency is installed
   if ! command -v $1 &> /dev/null
   then
-    echo "$1 was not found on your system, but is required to run this project"
+    echo "🚨 $1 was not found on your system, but is required to run this project"
     # get command to run to install the dependency and save it to  a variable we can print later
     install_command=$(install_using_package_manager $1 true)
     
