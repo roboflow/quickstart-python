@@ -215,6 +215,32 @@ npx --yes @roboflow/inference-server &> /dev/null &
 # and run the roboflow notebook
 pip3 install -v --log /tmp/pip.log roboflow notebook
 
+echo ""
+echo ""
+echo "Installation Complete!"
+echo ""
+echo ""
+echo "     && , &&                 &&(,.&&&   "
+echo "   && ,###( &&             && ,###, &&  "
+echo "   &&*####,*  &&         &&  *,####*#&  "
+echo "   & ,,####,,  &&&&&&&&&&&  ,,#####, &. "
+echo "   && ,#####,*,*,*,###,*,*,*,#####,  &  "
+echo "   &&  ,,#,  &&&   ###   &&&  ,,,,  &&  "
+echo "    && *,          ###          ,* &&   "
+echo "    &&    ######## ### ########    &&   "
+echo "  &&   ##### &&########### &&#####   && "
+echo "#&   ############  ###  ############   &"
+echo "  &&&#########    &&&&&   .#########&&& "
+echo "   &&&######,     @@@@@     ,######&&&  "
+echo "       &&&,*,*,&&&&&&&&&&&,*,*&&&&      "
+echo "           &&&&& & ((( & &&&&           "
+echo "                &&&   &&&               "
+echo ""
+echo ""
+echo "Starting Roboflow quickstart notebook..."
+echo ""
+sleep 3
+
 # run the roboflow notebook (./quickstart.ipynb)
 # if we're running in WSL, open with --no-browser and use the native cmd to open Jupyter
 # otherwise, open Jupyter normally
