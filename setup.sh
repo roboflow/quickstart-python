@@ -134,14 +134,15 @@ install_using_package_manager() {
       # overwrite node to nodejs
       if [[ $1 == "node" ]]
       then
+        module=" module"
         package="nodejs:18/common"
       fi
 
       if [[ $2 ]]
       then
-        echo "sudo yum $module install -y $package"
+        echo "sudo yum$module install -y $package"
       else
-        sudo yum $module install -y $package
+        sudo yum$module install -y $package
       fi
       ;;
 
