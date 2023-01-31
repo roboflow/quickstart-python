@@ -2,18 +2,24 @@
 
 # Output a cool Roboflow Quickstart ASCII art intro
 echo ""
-echo " ██████╗  ██████╗ ██████╗  ██████╗ ███████╗██╗      ██████╗ ██╗    ██╗"
 sleep 0.1
-echo " ██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗██╔════╝██║     ██╔═══██╗██║    ██║"
+echo ""
 sleep 0.1
-echo " ██████╔╝██║   ██║██████╔╝██║   ██║█████╗  ██║     ██║   ██║██║ █╗ ██║"
+echo " ██████╗   ██████╗  ██████╗   ██████╗  ███████╗ ██╗       ██████╗  ██╗    ██╗"
 sleep 0.1
-echo " ██╔══██╗██║   ██║██╔══██╗██║   ██║██╔══╝  ██║     ██║   ██║██║███╗██║"
+echo " ██╔══██╗ ██╔═══██╗ ██╔══██╗ ██╔═══██╗ ██╔════╝ ██║      ██╔═══██╗ ██║    ██║"
 sleep 0.1
-echo " ██║  ██║╚██████╔╝██████╔╝╚██████╔╝██║     ███████╗╚██████╔╝╚███╔███╔╝"
+echo " ██████╔╝ ██║   ██║ ██████╔╝ ██║   ██║ █████╗   ██║      ██║   ██║ ██║ █╗ ██║"
 sleep 0.1
-echo " ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ "
+echo " ██╔══██╗ ██║   ██║ ██╔══██╗ ██║   ██║ ██╔══╝   ██║      ██║   ██║ ██║███╗██║"
 sleep 0.1
+echo " ██║  ██║ ╚██████╔╝ ██████╔╝ ╚██████╔╝ ██║      ███████╗ ╚██████╔╝ ╚███╔███╔╝"
+sleep 0.1
+echo " ╚═╝  ╚═╝  ╚═════╝  ╚═════╝   ╚═════╝  ╚═╝      ╚══════╝  ╚═════╝   ╚══╝╚══╝ "
+echo ""
+sleep 0.1
+echo ""
+sleep 0.2
 
 # print the text from parameter 1 one character at a time
 printLettersOneByOne() {
@@ -33,12 +39,10 @@ printLettersOneByOne() {
   echo ""
 }
 
-printLettersOneByOne 0.02 "Welcome to the Roboflow Quickstart!"
-sleep 0.5
-
-printLettersOneByOne 0.02 "Let's check your dependencies and get started."
+printLettersOneByOne 0.01 "Welcome to the Roboflow computer vision quickstart!"
+printLettersOneByOne 0.01 "Let's check your dependencies and get started."
 echo ""
-sleep 0.1
+sleep 0.5
 
 # determine OS
 OS=$(uname -s | cut -d_ -f1 | tr A-Z a-z)
@@ -57,7 +61,11 @@ printLettersOneByOne 0.01 "    - create a virtual environment for pip dependenci
 printLettersOneByOne 0.01 "    - start a local Roboflow inference server"
 printLettersOneByOne 0.01 "    - open a local Jupyter notebook with quickstart.ipynb"
 echo ""
-sleep 1
+
+sleep 0.5
+
+# Pause to wait for user to read the above and be ready to continue
+read -p " Press any key to continue... 🦝 " -n 1 -r
 
 # for debugging, uncomment the following line to print all commands
 # set -ex
@@ -65,9 +73,31 @@ sleep 1
 # don't fail if already running as root
 sudo ()
 {
-    [[ $EUID = 0 ]] || set -- command sudo "$@"
-    "$@"
+    if [[ $EUID = 0 ]]; then
+        # already root, just run the command
+        if [[ $1 = "-E" ]]; then
+          shift
+        fi
+        "$@"
+    else
+        # not root, so use sudo
+        set -- command sudo "$@"
+        "$@"
+    fi
 }
+
+PYTHON_COMMAND="python3"
+PIP_COMMAND="pip3"
+# if using yum package manager, use python3.8 and pip3.8 instead of python3 and pip3
+if [[ $OS == "linux" ]]
+then
+  source /etc/os-release
+  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" ]]
+  then
+    PYTHON_COMMAND="python3.8"
+    PIP_COMMAND="pip3.8"
+  fi
+fi
 
 # modified install_using_package_manager function which accepts a second argument which,
 # when true, returns the command that will be run (so the calling code can preview it for the user),
@@ -76,36 +106,62 @@ install_using_package_manager() {
   case $OS in
   linux)
     source /etc/os-release
+
+    package=$1
     case $ID in
     debian | ubuntu | mint)
-      # overwrite the package name to python3-pip here if it's pip3 because apt is different
+      # overwrite the package names to nodejs and python3-pip here if it's pip3 because apt is different
       # otherwise leave it the same
-      package=$1
-      if [[ $1 == "pip3" ]]
-      then
-        package="python3-pip python3-venv"
-      fi
 
       # overwrite node to nodejs
       if [[ $1 == "node" ]]
       then
         package="nodejs"
       fi
+      
+      if [[ $1 == "pip3" ]]
+      then
+        package="python3-pip python3-venv"
+      fi
 
       if [[ $2 ]]
       then
-        echo "sudo apt update && sudo apt install -y $package"
+        if [[ $1 == "node" ]]
+        then
+          echo "curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt update && sudo apt install -y $package"
+        else
+          echo "sudo apt update && sudo apt install -y $package"
+        fi
       else
+        if [[ $1 == "node" ]]
+        then
+          curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        fi
         sudo apt update && sudo apt install -y $package
       fi
       ;;
 
     fedora | rhel | centos)
+      package=$1
+      module=""
+
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python38 python38-pip python38-devel gcc"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        module=" module"
+        package="nodejs:18/common"
+      fi
+
       if [[ $2 ]]
       then
-        echo "yum install $1"
+        echo "sudo yum$module install -y $package"
       else
-        sudo yum install $1
+        sudo yum$module install -y $package
       fi
       ;;
 
@@ -125,7 +181,8 @@ install_using_package_manager() {
       if ! command -v brew &> /dev/null
       then
         # notify them brew is missing and ask if they want to install it
-        echo "brew was not found on your system, but is required to run this project"
+        echo ""
+        echo "🚨 brew was not found on your system, but is required to run this project"
         read -p "Would you like to install brew now? [Y/n] " -n 1 -r
         echo ""
 
@@ -144,7 +201,7 @@ install_using_package_manager() {
   msys | mingw32 | mingw64)
     if [[ $2 ]]
     then
-      echo "Windows is not supported; please use WSL."
+      echo "Windows is not supported; please use Ubuntu via WSL."
     else
       # Can't get here because we exited already
       sleep 0.1
@@ -162,7 +219,8 @@ check_and_install_dependencies() {
   # check if the dependency is installed
   if ! command -v $1 &> /dev/null
   then
-    echo "$1 was not found on your system, but is required to run this project"
+    echo ""
+    echo "🚨 $1 was not found on your system, but is required to run this project"
     # get command to run to install the dependency and save it to  a variable we can print later
     install_command=$(install_using_package_manager $1 true)
     
@@ -189,29 +247,59 @@ check_and_install_dependencies() {
   fi
 }
 
+# check for curl
+check_and_install_dependencies curl
+
 # check for node
 check_and_install_dependencies node
 
 # check for python3
-check_and_install_dependencies python3
-check_and_install_dependencies pip3
+check_and_install_dependencies $PYTHON_COMMAND
+check_and_install_dependencies $PIP_COMMAND
 
 # create a virtual environment called roboflow if it doesn't already exist from a previous time they ran this script
 # and activate it
 if [[ ! -d roboflow ]]
 then
-  python3 -m venv roboflow
+  $PYTHON_COMMAND -m venv roboflow
 fi
 source roboflow/bin/activate
 export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-npx --yes @roboflow/inference-server &> /dev/null &
+npm install -g @roboflow/inference-server
+npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
 # and run the roboflow notebook
-pip3 install -v --log /tmp/pip.log roboflow notebook
+$PIP_COMMAND install -v --log /tmp/pip.log roboflow notebook
+
+echo ""
+echo ""
+echo "Installation Complete!"
+echo ""
+echo ""
+echo "     && , &&                 &&(,.&&&   "
+echo "   && ,###( &&             && ,###, &&  "
+echo "   &&*####,*  &&         &&  *,####*#&  "
+echo "   & ,,####,,  &&&&&&&&&&&  ,,#####, &. "
+echo "   && ,#####,*,*,*,###,*,*,*,#####,  &  "
+echo "   &&  ,,#,  &&&   ###   &&&  ,,,,  &&  "
+echo "    && *,          ###          ,* &&   "
+echo "    &&    ######## ### ########    &&   "
+echo "  &&   ##### &&########### &&#####   && "
+echo "#&   ############  ###  ############   &"
+echo "  &&&#########    &&&&&   .#########&&& "
+echo "   &&&######,     @@@@@     ,######&&&  "
+echo "       &&&,*,*,&&&&&&&&&&&,*,*&&&&      "
+echo "           &&&&& & ((( & &&&&           "
+echo "                &&&   &&&               "
+echo ""
+echo ""
+echo "Starting Roboflow quickstart notebook..."
+echo ""
+sleep 3
 
 # run the roboflow notebook (./quickstart.ipynb)
 # if we're running in WSL, open with --no-browser and use the native cmd to open Jupyter
