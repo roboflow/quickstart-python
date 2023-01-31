@@ -159,7 +159,7 @@ install_using_package_manager() {
   msys | mingw32 | mingw64)
     if [[ $2 ]]
     then
-      echo "Windows is not supported; please use WSL."
+      echo "Windows is not supported; please use Ubuntu via WSL."
     else
       # Can't get here because we exited already
       sleep 0.1
