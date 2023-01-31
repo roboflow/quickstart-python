@@ -73,8 +73,17 @@ read -p " Press any key to continue... 🦝 " -n 1 -r
 # don't fail if already running as root
 sudo ()
 {
-    [[ $EUID = 0 ]] || set -- command sudo "$@"
-    "$@"
+    if [[ $EUID = 0 ]]; then
+        # already root, just run the command
+        if [[ $1 = "-E" ]]; then
+          shift
+        fi
+        "$@"
+    else
+        # not root, so use sudo
+        set -- command sudo "$@"
+        "$@"
+    fi
 }
 
 PYTHON_COMMAND="python3"
