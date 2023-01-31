@@ -126,7 +126,7 @@ install_using_package_manager() {
     fedora | rhel | centos)
       if [[ $1 == $PYTHON_COMMAND ]]
       then
-        package="python38 python38-pip python3-devel gcc"
+        package="python38 python38-pip python38-devel gcc"
       fi
 
       if [[ $2 ]]
