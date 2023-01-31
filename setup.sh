@@ -307,11 +307,13 @@ sleep 3
 # if we're running in WSL, open with --no-browser and use the native cmd to open Jupyter
 # otherwise, open Jupyter normally
 
+token=$(head /dev/urandom | sha256sum | cut -d' ' -f1)
+
 # detect WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null
 then
   sleep 1 && /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888/notebooks/quickstart.ipynb" &
-  jupyter notebook --no-browser --port 8888 --ip 0.0.0.0 --NotebookApp.token="$(head /dev/urandom | md5)" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')"
+  jupyter notebook --no-browser --port 8888 --ip 0.0.0.0 --NotebookApp.token="$token" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')"
 else
-  jupyter notebook --allow-root --port 8888 --ip 0.0.0.0 --NotebookApp.token="$(head /dev/urandom | md5)" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')" ./quickstart.ipynb 
+  jupyter notebook --allow-root --port 8888 --ip 0.0.0.0 --NotebookApp.token="$token" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')" ./quickstart.ipynb 
 fi
