@@ -113,7 +113,7 @@ install_using_package_manager() {
     fedora | rhel | centos)
       if [[ $1 == "python3" ]]
       then
-        package="python3 python3-pip"
+        package="python38 python38-pip"
       fi
 
       if [[ $2 ]]
