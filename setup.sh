@@ -270,7 +270,7 @@ export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-npm install -g @roboflow/inference-server
+sudo npm install -g @roboflow/inference-server
 npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
