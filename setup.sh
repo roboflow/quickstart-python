@@ -117,8 +117,17 @@ install_using_package_manager() {
 
       if [[ $2 ]]
       then
-        echo "sudo apt update && sudo apt install -y $package"
+        if [[ $1 == "node" ]]
+        then
+          echo "curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt update && sudo apt install -y $package"
+        else
+          echo "sudo apt update && sudo apt install -y $package"
+        fi
       else
+        if [[ $1 == "node" ]]
+        then
+          curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        fi
         sudo apt update && sudo apt install -y $package
       fi
       ;;
@@ -126,7 +135,7 @@ install_using_package_manager() {
     fedora | rhel | centos)
       package=$1
       module=""
-      
+
       if [[ $1 == $PYTHON_COMMAND ]]
       then
         package="python38 python38-pip python38-devel gcc"
