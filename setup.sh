@@ -119,7 +119,7 @@ install_using_package_manager() {
 
     package=$1
     case $ID in
-    debian | ubuntu | mint)
+    debian | ubuntu | linuxmint | mint)
       # overwrite the package names to nodejs and python3-pip here if it's pip3 because apt is different
       # otherwise leave it the same
 
