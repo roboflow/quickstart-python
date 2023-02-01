@@ -287,6 +287,12 @@ check_and_install_dependencies() {
 # check for curl
 check_and_install_dependencies curl
 
+# if OS is linux and ID is amzn install gcc (node needs it to build)
+if [[ $OS == "linux" && $ID == "amzn" ]]
+then
+  check_and_install_dependencies gcc
+fi
+
 # check for node
 check_and_install_dependencies node
 
