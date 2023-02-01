@@ -178,13 +178,9 @@ install_using_package_manager() {
       then
         if [[ $2 ]]
         then
-          echo "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash && nvm install 16"
+          echo "curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s 16"
         else
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-          nvm install 16
+          curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s 16
         fi
         return
       fi
@@ -290,10 +286,11 @@ check_and_install_dependencies curl
 check_and_install_dependencies $PYTHON_COMMAND
 check_and_install_dependencies $PIP_COMMAND
 
-# if OS is linux and ID is amzn install gcc (node needs it to build)
+# if OS is linux and ID is amzn install basic dependencies
 if [[ $OS == "linux" && $ID == "amzn" ]]
 then
   check_and_install_dependencies gcc
+  check_and_install_dependencies tar
 fi
 
 # check for node
