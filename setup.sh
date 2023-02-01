@@ -1,5 +1,7 @@
 #!/bin/bash
 
+NOTEBOOK_PASSWORD="roboflow"
+
 # Output a cool Roboflow Quickstart ASCII art intro
 echo ""
 sleep 0.1
@@ -92,7 +94,7 @@ PIP_COMMAND="pip3"
 if [[ $OS == "linux" ]]
 then
   source /etc/os-release
-  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" ]]
+  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" || $ID == "amzn" ]]
   then
     PYTHON_COMMAND="python3.8"
     PIP_COMMAND="pip3.8"
@@ -164,7 +166,37 @@ install_using_package_manager() {
         sudo yum$module install -y $package
       fi
       ;;
+    amzn)
+      package=$1
+      
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python38 python38-devel gcc"
+      fi
 
+      if [[ $1 == "node" ]]
+      then
+        if [[ $2 ]]
+        then
+          echo "curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | sudo bash -s 16"
+        else
+          curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | sudo bash -s 16
+        fi
+        return
+      fi
+
+      if [[ $2 ]]
+      then
+        echo "sudo yum install -y $package"
+      else
+        # if python or pip command, enable from amazon-linux-extras
+        if [[ $1 == $PYTHON_COMMAND || $1 == $PIP_COMMAND ]]
+        then
+          sudo amazon-linux-extras enable python3.8
+        fi
+        sudo yum install -y $package
+      fi
+      ;;
     *)
       echo -n "Unable to detect the default package manager for this Linux distro (please install node.js and python3 on your own and try again)."
       exit 1
@@ -250,12 +282,19 @@ check_and_install_dependencies() {
 # check for curl
 check_and_install_dependencies curl
 
-# check for node
-check_and_install_dependencies node
-
 # check for python3
 check_and_install_dependencies $PYTHON_COMMAND
 check_and_install_dependencies $PIP_COMMAND
+
+# if OS is linux and ID is amzn install basic dependencies
+if [[ $OS == "linux" && $ID == "amzn" ]]
+then
+  check_and_install_dependencies gcc
+  check_and_install_dependencies tar
+fi
+
+# check for node
+check_and_install_dependencies node
 
 # create a virtual environment called roboflow if it doesn't already exist from a previous time they ran this script
 # and activate it
@@ -268,7 +307,6 @@ export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-npm install -g @roboflow/inference-server
 npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
@@ -298,6 +336,7 @@ echo "                &&&   &&&               "
 echo ""
 echo ""
 echo "Starting Roboflow quickstart notebook..."
+echo "🚨 If prompted, use the password: $NOTEBOOK_PASSWORD"
 echo ""
 sleep 3
 
@@ -305,11 +344,13 @@ sleep 3
 # if we're running in WSL, open with --no-browser and use the native cmd to open Jupyter
 # otherwise, open Jupyter normally
 
+token=$(head /dev/urandom | sha256sum | cut -d' ' -f1)
+
 # detect WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null
 then
   sleep 1 && /mnt/c/Windows/system32/cmd.exe /c "start http://localhost:8888/notebooks/quickstart.ipynb" &
-  jupyter notebook --no-browser --port 8888
+  jupyter notebook --no-browser --port 8888 --ip 0.0.0.0 --NotebookApp.token="$token" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')"
 else
-  jupyter notebook --allow-root ./quickstart.ipynb
+  jupyter notebook --allow-root --port 8888 --ip 0.0.0.0 --NotebookApp.token="$token" --NotebookApp.password="$(echo $NOTEBOOK_PASSWORD | python3 -c 'from notebook.auth import passwd;print(passwd(input()))')" ./quickstart.ipynb 
 fi
