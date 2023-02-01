@@ -330,7 +330,7 @@ then
 fi
 
 # ensure python ($PYTHON_COMMAND) is at least version 3.8
-VALID_PYTHON_VERSION=$($PYTHON_COMMAND -c 'import sys; print(1) if sys.version_info.major >= 3 and sys.version_info.minor > 8 else print(0)')
+VALID_PYTHON_VERSION=$($PYTHON_COMMAND -c 'import sys; print(1) if sys.version_info.major >= 3 and sys.version_info.minor >= 8 else print(0)')
 
 if [[ $VALID_PYTHON_VERSION -eq 0 ]]
 then
