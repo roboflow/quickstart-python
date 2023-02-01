@@ -163,8 +163,20 @@ install_using_package_manager() {
       # overwrite node to nodejs
       if [[ $1 == "node" ]]
       then
-        module=" module"
-        package="nodejs:18/common"
+        if [[ $ID == "centos" ]]
+        then
+          # on centos their version of nodejs is too old so we have to add a different source
+          if [[ $2 ]]
+          then
+            echo "curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash - && sudo yum install -y nodejs"
+          else
+            curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash - && sudo yum install -y nodejs
+          fi
+          return
+        else
+          module=" module"
+          package="nodejs:18/common"
+        fi
       fi
 
       if [[ $2 ]]
