@@ -178,9 +178,9 @@ install_using_package_manager() {
       then
         if [[ $2 ]]
         then
-          echo "curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s 16"
+          echo "curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | sudo bash -s 16"
         else
-          curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s 16
+          curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | sudo bash -s 16
         fi
         return
       fi
