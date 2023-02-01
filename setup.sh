@@ -206,7 +206,10 @@ install_using_package_manager() {
       fi
       ;;
     *)
-      echo -n "Unable to detect the default package manager for this Linux distro (please install node.js and python3 on your own and try again)."
+      echo ""
+      echo ""
+      echo "❌ Unable to detect the default package manager for this Linux distro (please install node.js>=16 and python>=3.8 (along with basic utils like curl, gcc, and tar) on your own and try again."
+      echo ""
       exit 1
       ;;
     esac
