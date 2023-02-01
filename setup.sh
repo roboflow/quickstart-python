@@ -23,6 +23,14 @@ sleep 0.1
 echo ""
 sleep 0.2
 
+# override the read command to just echo & not wait if the user passes in the -y flag
+if [[ $1 == "-y" ]]
+then
+  read() {
+    echo "$2"
+  }
+fi
+
 # print the text from parameter 1 one character at a time
 printLettersOneByOne() {
   delay=$1
@@ -307,7 +315,8 @@ export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-npx @roboflow/inference-server --yes &> /dev/null &
+# we cd into the `roboflow` folder we just created so we run as the same user that just created it; this prevents an issue when running as root in docker
+cd roboflow && npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
 # and run the roboflow notebook
