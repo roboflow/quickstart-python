@@ -307,6 +307,28 @@ fi
 # check for node
 check_and_install_dependencies node
 
+# ensure node is at least version 16
+if [[ $(node -v | cut -d'v' -f2 | cut -d'.' -f1) -lt 16 ]]
+then
+  echo ""
+  echo "❌ Node.js version 16 or greater is required to run this project"
+  echo "If we just finished installing it, your package manager's version is too old; consider upgrading your distro."
+  echo ""
+  exit 1
+fi
+
+# ensure python ($PYTHON_COMMAND) is at least version 3.8
+VALID_PYTHON_VERSION=$($PYTHON_COMMAND -c 'import sys; print(1) if sys.version_info.major >= 3 and sys.version_info.minor > 8 else print(0)')
+
+if [[ $VALID_PYTHON_VERSION -eq 0 ]]
+then
+  echo ""
+  echo "❌ Python version 3.8 or greater is required to run this project"
+  echo "If we just finished installing it, your package manager's version is too old; consider upgrading your distro."
+  echo ""
+  exit 1
+fi
+
 # create a virtual environment called roboflow if it doesn't already exist from a previous time they ran this script
 # and activate it
 if [[ ! -d roboflow ]]
