@@ -193,6 +193,11 @@ install_using_package_manager() {
       then
         echo "sudo yum install -y $package"
       else
+        # if python or pip command, enable from amazon-linux-extras
+        if [[ $1 == $PYTHON_COMMAND || $1 == $PIP_COMMAND ]]
+        then
+          sudo amazon-linux-extras enable python3.8
+        fi
         sudo yum install -y $package
       fi
       ;;
