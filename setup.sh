@@ -171,13 +171,7 @@ install_using_package_manager() {
       
       if [[ $1 == $PYTHON_COMMAND ]]
       then
-        if [[ $2 ]]
-        then
-          echo "sudo amazon-linux-extras install -y python3.8"
-        else
-          sudo amazon-linux-extras install -y python3.8
-        fi
-        return
+        package="python38 python38-devel gcc"
       fi
 
       if [[ $1 == "node" ]]
@@ -287,6 +281,10 @@ check_and_install_dependencies() {
 # check for curl
 check_and_install_dependencies curl
 
+# check for python3
+check_and_install_dependencies $PYTHON_COMMAND
+check_and_install_dependencies $PIP_COMMAND
+
 # if OS is linux and ID is amzn install gcc (node needs it to build)
 if [[ $OS == "linux" && $ID == "amzn" ]]
 then
@@ -295,10 +293,6 @@ fi
 
 # check for node
 check_and_install_dependencies node
-
-# check for python3
-check_and_install_dependencies $PYTHON_COMMAND
-check_and_install_dependencies $PIP_COMMAND
 
 # create a virtual environment called roboflow if it doesn't already exist from a previous time they ran this script
 # and activate it
