@@ -226,7 +226,7 @@ install_using_package_manager() {
       # overwrite node to nodejs
       if [[ $1 == "node" ]]
       then
-        package="nodejs"
+        package="nodejs npm"
       fi
 
       if [[ $2 ]]
