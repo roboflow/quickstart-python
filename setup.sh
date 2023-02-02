@@ -236,6 +236,25 @@ install_using_package_manager() {
         sudo pacman -S --noconfirm $package
       fi
       ;;
+    alpine)
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python3 cmake gcc"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs npm"
+      fi
+
+      if [[ $2 ]]
+      then
+        echo "sudo apk add $package"
+      else
+        sudo apk add $package
+      fi
+      ;;
     *)
       echo ""
       echo ""
