@@ -328,8 +328,8 @@ check_and_install_dependencies curl
 check_and_install_dependencies $PYTHON_COMMAND
 
 # check for pip
-# except on arch and manjaro, where pip is installed with python
-if [[ $OS != "linux" || $ID != "arch" && $ID != "manjaro" ]]
+# except on fedora, arch, and manjaro, where pip is installed with python
+if [[ $OS != "linux" || $ID != "fedora" && $ID != "arch" && $ID != "manjaro" ]]
 then
   check_and_install_dependencies $PIP_COMMAND
 fi
