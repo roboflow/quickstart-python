@@ -326,7 +326,13 @@ check_and_install_dependencies curl
 
 # check for python3
 check_and_install_dependencies $PYTHON_COMMAND
-check_and_install_dependencies $PIP_COMMAND
+
+# check for pip
+# except on arch and manjaro, where pip is installed with python
+if [[ $OS != "linux" || $ID != "arch" && $ID != "manjaro" ]]
+then
+  check_and_install_dependencies $PIP_COMMAND
+fi
 
 # if OS is linux and ID is amzn install basic dependencies
 if [[ $OS == "linux" && $ID == "amzn" ]]
