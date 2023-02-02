@@ -290,13 +290,19 @@ install_using_package_manager() {
     gentoo)
       if [[ $1 == $PYTHON_COMMAND ]]
       then
-        package="python"
+        package="dev-lang/python"
+      fi
+
+      # for pip, it's dev-python/pip
+      if [[ $1 == $PIP_COMMAND ]]
+      then
+        package="dev-python/pip"
       fi
 
       # overwrite node to nodejs
       if [[ $1 == "node" ]]
       then
-        package="nodejs npm"
+        package="net-libs/nodejs"
       fi
 
       if [[ $2 ]]
