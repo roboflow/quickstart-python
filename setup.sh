@@ -217,7 +217,7 @@ install_using_package_manager() {
         sudo yum install -y $package
       fi
       ;;
-    arch)
+    arch | manjaro)
       if [[ $1 == $PYTHON_COMMAND ]]
       then
         package="python3 cmake gcc"
