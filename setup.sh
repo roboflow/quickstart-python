@@ -287,6 +287,25 @@ install_using_package_manager() {
         sudo zypper install -y $package
       fi
       ;;
+    gentoo)
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs npm"
+      fi
+
+      if [[ $2 ]]
+      then
+        echo "sudo emerge $package"
+      else
+        sudo emerge $package
+      fi
+      ;;
     *)
       echo ""
       echo ""
