@@ -124,6 +124,12 @@ install_using_package_manager() {
   linux)
     source /etc/os-release
 
+    # if the ID starts with opensuse, simplify it to opensuse
+    if [[ $ID =~ "opensuse" ]]
+    then
+      ID="opensuse"
+    fi
+
     package=$1
     case $ID in
     debian | ubuntu | linuxmint | mint)
