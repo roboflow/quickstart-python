@@ -346,9 +346,15 @@ check_and_install_dependencies curl
 # check for python3
 check_and_install_dependencies $PYTHON_COMMAND
 
+# alpine needs some additional build tools
+if [[ $OS == "linux" && $ID == "alpine" ]]
+then
+  apk add python-dev gfortran py-pip build-base
+fi
+
 # check for pip
 # except on fedora, arch, and manjaro, where pip is installed with python
-if [[ $OS != "linux" || $ID != "fedora" && $ID != "arch" && $ID != "manjaro" ]]
+if [[ $OS != "linux" || $ID != "fedora" && $ID != "arch" && $ID != "manjaro" && $ID != "alpine" ]]
 then
   check_and_install_dependencies $PIP_COMMAND
 fi
