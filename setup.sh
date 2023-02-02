@@ -235,6 +235,7 @@ install_using_package_manager() {
       else
         sudo pacman -S --noconfirm $package
       fi
+      ;;
     *)
       echo ""
       echo ""
