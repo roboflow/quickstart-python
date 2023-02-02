@@ -23,6 +23,14 @@ sleep 0.1
 echo ""
 sleep 0.2
 
+# override the read command to just echo & not wait if the user passes in the -y flag
+if [[ $1 == "-y" ]]
+then
+  read() {
+    echo "$2"
+  }
+fi
+
 # print the text from parameter 1 one character at a time
 printLettersOneByOne() {
   delay=$1
@@ -94,7 +102,7 @@ PIP_COMMAND="pip3"
 if [[ $OS == "linux" ]]
 then
   source /etc/os-release
-  if [[ $ID == "fedora" || $ID == "rhel" || $ID == "centos" || $ID == "amzn" ]]
+  if [[ $ID == "rhel" || $ID == "centos" || $ID == "amzn" ]]
   then
     PYTHON_COMMAND="python3.8"
     PIP_COMMAND="pip3.8"
@@ -111,7 +119,7 @@ install_using_package_manager() {
 
     package=$1
     case $ID in
-    debian | ubuntu | mint)
+    debian | ubuntu | linuxmint | mint)
       # overwrite the package names to nodejs and python3-pip here if it's pip3 because apt is different
       # otherwise leave it the same
 
@@ -155,8 +163,20 @@ install_using_package_manager() {
       # overwrite node to nodejs
       if [[ $1 == "node" ]]
       then
-        module=" module"
-        package="nodejs:18/common"
+        if [[ $ID == "centos" ]]
+        then
+          # on centos their version of nodejs is too old so we have to add a different source
+          if [[ $2 ]]
+          then
+            echo "curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash - && sudo yum install -y nodejs"
+          else
+            curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash - && sudo yum install -y nodejs
+          fi
+          return
+        else
+          module=" module"
+          package="nodejs:18/common"
+        fi
       fi
 
       if [[ $2 ]]
@@ -198,7 +218,10 @@ install_using_package_manager() {
       fi
       ;;
     *)
-      echo -n "Unable to detect the default package manager for this Linux distro (please install node.js and python3 on your own and try again)."
+      echo ""
+      echo ""
+      echo "❌ Unable to detect the default package manager for this Linux distro (please install node.js>=16 and python>=3.8 (along with basic utils like curl, gcc, and tar) on your own and try again."
+      echo ""
       exit 1
       ;;
     esac
@@ -296,6 +319,28 @@ fi
 # check for node
 check_and_install_dependencies node
 
+# ensure node is at least version 16
+if [[ $(node -v | cut -d'v' -f2 | cut -d'.' -f1) -lt 16 ]]
+then
+  echo ""
+  echo "❌ Node.js version 16 or greater is required to run this project"
+  echo "If we just finished installing it, your package manager's version is too old; consider upgrading your distro."
+  echo ""
+  exit 1
+fi
+
+# ensure python ($PYTHON_COMMAND) is at least version 3.8
+VALID_PYTHON_VERSION=$($PYTHON_COMMAND -c 'import sys; print(1) if sys.version_info.major >= 3 and sys.version_info.minor >= 8 else print(0)')
+
+if [[ $VALID_PYTHON_VERSION -eq 0 ]]
+then
+  echo ""
+  echo "❌ Python version 3.8 or greater is required to run this project"
+  echo "If we just finished installing it, your package manager's version is too old; consider upgrading your distro."
+  echo ""
+  exit 1
+fi
+
 # create a virtual environment called roboflow if it doesn't already exist from a previous time they ran this script
 # and activate it
 if [[ ! -d roboflow ]]
@@ -307,7 +352,8 @@ export PATH=$PATH:~/.local/bin
 
 # run @roboflow/inference-server in the background with npx
 # this will exit when the script ends
-npx @roboflow/inference-server --yes &> /dev/null &
+# we cd into the `roboflow` folder we just created so we run as the same user that just created it; this prevents an issue when running as root in docker
+cd roboflow && npx @roboflow/inference-server --yes &> /dev/null &
 
 # pip install the requirements
 # and run the roboflow notebook
