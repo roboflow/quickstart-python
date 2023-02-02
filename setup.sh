@@ -218,6 +218,17 @@ install_using_package_manager() {
       fi
       ;;
     arch)
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python3 cmake gcc"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs"
+      fi
+
       if [[ $2 ]]
       then
         echo "sudo pacman -S --noconfirm $package"
