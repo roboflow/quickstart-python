@@ -217,6 +217,13 @@ install_using_package_manager() {
         sudo yum install -y $package
       fi
       ;;
+    arch)
+      if [[ $2 ]]
+      then
+        echo "sudo pacman -S --noconfirm $package"
+      else
+        sudo pacman -S --noconfirm $package
+      fi
     *)
       echo ""
       echo ""
