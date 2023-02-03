@@ -497,7 +497,8 @@ fi
 if [[ $OS == "freebsd" ]]
 then
   sudo kldload linux64.ko
-  sudo pkg install -y py39-numpy py39-matplotlib py39-pillow zlib libjpeg-turbo linux-c7-zlib-devel
+  $PYTHON_COMMAND -m pip install --upgrade pip
+  sudo pkg install -y py39-numpy py39-matplotlib py39-pillow zlib libjpeg-turbo linux-c7-zlib-devel boost-all py39-boost-libs
 fi
 
 # pip install the requirements
