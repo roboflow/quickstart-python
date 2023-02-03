@@ -217,6 +217,44 @@ install_using_package_manager() {
         sudo yum install -y $package
       fi
       ;;
+    arch | manjaro)
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python3 cmake gcc"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs npm"
+      fi
+
+      if [[ $2 ]]
+      then
+        echo "sudo pacman -S --noconfirm $package"
+      else
+        sudo pacman -S --noconfirm $package
+      fi
+      ;;
+    alpine)
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python3 cmake gcc"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs npm"
+      fi
+
+      if [[ $2 ]]
+      then
+        echo "sudo apk add $package"
+      else
+        sudo apk add $package
+      fi
+      ;;
     *)
       echo ""
       echo ""
@@ -307,7 +345,13 @@ check_and_install_dependencies curl
 
 # check for python3
 check_and_install_dependencies $PYTHON_COMMAND
-check_and_install_dependencies $PIP_COMMAND
+
+# check for pip
+# except on fedora, arch, and manjaro, where pip is installed with python
+if [[ $OS != "linux" || $ID != "fedora" && $ID != "arch" && $ID != "manjaro" && $ID != "alpine" ]]
+then
+  check_and_install_dependencies $PIP_COMMAND
+fi
 
 # if OS is linux and ID is amzn install basic dependencies
 if [[ $OS == "linux" && $ID == "amzn" ]]
@@ -354,6 +398,13 @@ export PATH=$PATH:~/.local/bin
 # this will exit when the script ends
 # we cd into the `roboflow` folder we just created so we run as the same user that just created it; this prevents an issue when running as root in docker
 cd roboflow && npx @roboflow/inference-server --yes &> /dev/null &
+
+# alpine needs some additional build tools
+if [[ $OS == "linux" && $ID == "alpine" ]]
+then
+  apk add build-base g++ gfortran jpeg-dev libjpeg make py3-numpy py3-numpy-dev py3-pip python3-dev zlib-dev
+  $PIP_COMMAND -v --log /tmp/pip.log install wheel
+fi
 
 # pip install the requirements
 # and run the roboflow notebook
