@@ -107,6 +107,13 @@ then
     PYTHON_COMMAND="python3.8"
     PIP_COMMAND="pip3.8"
   fi
+
+  # for suse (ID starts with opensuse) use python3.9 and pip3.9 (because they're in zypper)
+  if [[ $ID =~ "opensuse" ]]
+  then
+    PYTHON_COMMAND="python3.9"
+    PIP_COMMAND="pip3.9"
+  fi
 fi
 
 # modified install_using_package_manager function which accepts a second argument which,
@@ -116,6 +123,12 @@ install_using_package_manager() {
   case $OS in
   linux)
     source /etc/os-release
+
+    # if the ID starts with opensuse, simplify it to opensuse
+    if [[ $ID =~ "opensuse" ]]
+    then
+      ID="opensuse"
+    fi
 
     package=$1
     case $ID in
@@ -253,6 +266,25 @@ install_using_package_manager() {
         echo "sudo apk add $package"
       else
         sudo apk add $package
+      fi
+      ;;
+    opensuse)
+      if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python39 python39-pip cmake gcc"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="nodejs npm"
+      fi
+
+      if [[ $2 ]]
+      then
+        echo "sudo zypper install -y $package"
+      else
+        sudo zypper install -y $package
       fi
       ;;
     *)
