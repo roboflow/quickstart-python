@@ -493,6 +493,12 @@ then
   $PIP_COMMAND -v --log /tmp/pip.log install wheel
 fi
 
+# on freebsd, install the prebuilt numpy and matplotlib wheels
+if [[ $OS == "freebsd" ]]
+then
+  $PIP_COMMAND -v --log /tmp/pip.log install py39-numpy py39-matplotlib
+fi
+
 # pip install the requirements
 # and run the roboflow notebook
 $PIP_COMMAND install -v --log /tmp/pip.log roboflow notebook
