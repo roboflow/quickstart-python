@@ -496,7 +496,7 @@ fi
 # on freebsd, install the prebuilt numpy and matplotlib wheels
 if [[ $OS == "freebsd" ]]
 then
-  $PIP_COMMAND -v --log /tmp/pip.log install py39-numpy py39-matplotlib
+  pkg install -y py39-numpy py39-matplotlib
 fi
 
 # pip install the requirements
