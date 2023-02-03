@@ -305,14 +305,14 @@ install_using_package_manager() {
       if [[ $1 == "node" ]]
       then
         package="net-libs/nodejs"
-        USE=" USE=npm"
+        export USE="npm"
       fi
 
       if [[ $2 ]]
       then
-        echo "sudo$USE emerge $package"
+        echo "sudo emerge $package"
       else
-        sudo$USE emerge $package
+        sudo emerge $package
       fi
       ;;
     *)
