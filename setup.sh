@@ -347,6 +347,8 @@ install_using_package_manager() {
 
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       fi
+
+      brew install $1
     fi
     ;;
 
