@@ -288,6 +288,8 @@ install_using_package_manager() {
       fi
       ;;
     gentoo)
+      USE=""
+
       if [[ $1 == $PYTHON_COMMAND ]]
       then
         package="dev-lang/python"
@@ -303,13 +305,14 @@ install_using_package_manager() {
       if [[ $1 == "node" ]]
       then
         package="net-libs/nodejs"
+        USE=" USE=npm"
       fi
 
       if [[ $2 ]]
       then
-        echo "sudo emerge $package"
+        echo "sudo$USE emerge $package"
       else
-        sudo emerge $package
+        sudo$USE emerge $package
       fi
       ;;
     *)
