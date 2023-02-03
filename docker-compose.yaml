@@ -1,0 +1,11 @@
+
+services:
+  roboflow-quickstart:
+    image: ubuntu:jammy
+    container_name: roboflow-quickstart
+    entrypoint: ["bash", "-c", "sleep 2 && cd /roboflow/quickstart-python && /bin/bash setup.sh -y -p"]
+    ports:
+      - 8888:8888
+      - 9001:9001
+    volumes:
+      - ./:/roboflow/quickstart-python

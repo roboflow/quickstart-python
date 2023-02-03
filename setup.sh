@@ -518,6 +518,10 @@ sleep 3
 
 token=$(head /dev/urandom | sha256sum | cut -d' ' -f1)
 
+if [[ $2 == "-p" ]]
+then
+    echo "Jupyter notebook token is $token"
+fi
 # detect WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null
 then
