@@ -116,6 +116,13 @@ then
   fi
 fi
 
+# if freebsd, use python3.9 and pip3.9
+if [[ $OS == "freebsd" ]]
+then
+  PYTHON_COMMAND="python3.9"
+  PIP_COMMAND="pip3.9"
+fi
+
 # modified install_using_package_manager function which accepts a second argument which,
 # when true, returns the command that will be run (so the calling code can preview it for the user),
 # and when false actually runs the command
@@ -347,6 +354,26 @@ install_using_package_manager() {
 
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       fi
+    fi
+    ;;
+  
+  freebsd)
+    if [[ $1 == $PYTHON_COMMAND ]]
+      then
+        package="python39 py39-pip cmake gcc"
+      fi
+
+      # overwrite node to nodejs
+      if [[ $1 == "node" ]]
+      then
+        package="node npm"
+      fi
+
+    if [[ $2 ]]
+    then
+      echo "sudo pkg install -y $package"
+    else
+      sudo pkg install -y $package
     fi
     ;;
 
