@@ -326,9 +326,16 @@ install_using_package_manager() {
     ;;
 
   darwin)
+    # for sha256sum, the package is coreutils
+    package=$1
+    if [[ $1 == "sha256sum" ]]
+    then
+      package="coreutils"
+    fi
+
     if [[ $2 ]]
     then
-      echo "brew install $1"
+      echo "brew install $package"
     else
       # first ensure brew is installed
       if ! command -v brew &> /dev/null
@@ -347,6 +354,8 @@ install_using_package_manager() {
 
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       fi
+
+      brew install $package
     fi
     ;;
 
@@ -402,6 +411,12 @@ check_and_install_dependencies() {
 
 # check for curl
 check_and_install_dependencies curl
+
+# on mac we need coreutils
+if [[ $OS == "darwin" ]]
+then
+  check_and_install_dependencies sha256sum
+fi
 
 # check for python3
 check_and_install_dependencies $PYTHON_COMMAND
