@@ -358,16 +358,16 @@ install_using_package_manager() {
     ;;
   
   freebsd)
-    if [[ $1 == $PYTHON_COMMAND ]]
-      then
-        package="python39 py39-pip cmake gcc"
-      fi
+    if [[ $1 == $PYTHON_COMMAND || $1 == $PIP_COMMAND ]]
+    then
+      package="python39 py39-pip cmake gcc"
+    fi
 
-      # overwrite node to nodejs
-      if [[ $1 == "node" ]]
-      then
-        package="node npm"
-      fi
+    # overwrite node to nodejs
+    if [[ $1 == "node" ]]
+    then
+      package="node npm"
+    fi
 
     if [[ $2 ]]
     then
