@@ -493,10 +493,11 @@ then
   $PIP_COMMAND -v --log /tmp/pip.log install wheel
 fi
 
-# on freebsd, install the prebuilt numpy and matplotlib wheels
+# on freebsd, install the prebuilt numpy and matplotlib wheels plus other dependencies
 if [[ $OS == "freebsd" ]]
 then
-  pkg install -y py39-numpy py39-matplotlib
+  sudo kldload linux64.ko
+  sudo pkg install -y py39-numpy py39-matplotlib py39-pillow zlib libjpeg-turbo linux-c7-zlib-devel
 fi
 
 # pip install the requirements
