@@ -483,7 +483,7 @@ fi
 
 # pip install the requirements
 # and run the roboflow notebook
-$PIP_COMMAND install -v --log /tmp/pip.log roboflow notebook
+$PIP_COMMAND install -v --log /tmp/pip.log roboflow notebook ipython ipywidgets
 
 echo ""
 echo ""
