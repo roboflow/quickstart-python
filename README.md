@@ -85,8 +85,10 @@ If the error persists or you encounter a different error, please open an issue i
 ## Getting Started
 
 Once the installation is complete, a Jupyter notebook will open in your browser. Follow the instructions provided in the notebook to get started!
+Q
 
-https://user-images.githubusercontent.com/37276661/226327812-c5a6a14b-dff7-4726-86a3-e588f20d5e4e.mov
+https://github.com/roboflow/quickstart-python/assets/60797147/03138ab7-e545-4787-b568-9a84914c8cf7
+
 
 This repository includes the following demos:
 
