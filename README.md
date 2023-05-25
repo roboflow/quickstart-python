@@ -67,6 +67,7 @@ git clone https://github.com/roboflow/quickstart-python
 cd quickstart-python && ./setup.sh
 ```
 
+
 https://user-images.githubusercontent.com/37276661/226327781-fb2b7b7e-f896-407d-9f0c-6e10e9a7198c.mov
 
 ## Troubleshooting
@@ -85,7 +86,7 @@ If the error persists or you encounter a different error, please open an issue i
 ## Getting Started
 
 Once the installation is complete, a Jupyter notebook will open in your browser. Follow the instructions provided in the notebook to get started!
-Q
+
 
 https://github.com/roboflow/quickstart-python/assets/60797147/03138ab7-e545-4787-b568-9a84914c8cf7
 
