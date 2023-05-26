@@ -56,7 +56,7 @@ Roboflow is a set of tools to help you build a production-ready computer vision 
 - **Live Inference with Webcam:** Perform real-time object detection using your webcam in a Jupyter notebook.
 - **Dependency Installation:** Automatically installs all the necessary dependencies to quickly get started with Roboflow.
 - **Comprehensive Model Support:** Utilize Roboflow for object detection, semantic segmentation, and image classification tasks within your projects.
-- **Training Resources:** Access additional guides and materials to kickstart your own model training process.
+- **Model Training Resources:** Access additional guides and materials to kickstart your own model training process.
 
 ## Installation
 
